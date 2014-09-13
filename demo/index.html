@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Drag to Reorder</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="demo.css">
+    <link rel="shortcut icon" href="./favicon.ico">
+  </head>
+  <body ng-app="demo">
+    <div class="content">
+      <h1>Drag to Reorder</h1>
+      <div ng-controller="BasicListCtrl" class="example">
+        <ul class="planets">
+          <li class="planet" ng-repeat="planet in planets" drag-to-reorder="planets">{{planet}}</li>
+        </ul>
+      </div>
+      <a class="octocat" href="https://github.com/brandly/angular-drag-to-reorder">
+        <img src="GitHub-Mark-32px.png" alt="GitHub">
+      </a>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"></script>
+    <script src="angular-drag-to-reorder.js"></script>
+    <script src="demo.js"></script>
+  </body>
+</html>

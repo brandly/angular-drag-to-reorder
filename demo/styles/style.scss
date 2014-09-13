@@ -1,0 +1,58 @@
+@import 'reset';
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 36px;
+  line-height: 40px;
+}
+
+.content {
+  margin: 40px auto;
+  max-width: 400px;
+}
+
+.example {
+  margin: 20px 0;
+}
+
+$border-style: 1px solid #ccc;
+$base-padding: 8px;
+
+li {
+  padding: $base-padding;
+  border-bottom: $border-style;
+
+  &:first-child {
+    border-top: $border-style;
+  }
+}
+
+.octocat {
+  display: block;
+  width: 32px;
+  margin: 0 auto;
+}
+
+/*
+ *  dragging stuff
+ */
+
+.dragging {
+  opacity: 0.3;
+}
+
+.dropping {
+  background-color: #efefef;
+}
+
+.dropping-above {
+  padding-top: $base-padding * 2;
+}
+
+.dropping-below {
+  padding-bottom: $base-padding * 2;
+}

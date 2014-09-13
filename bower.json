@@ -1,0 +1,15 @@
+{
+  "name": "angular-drag-to-reorder",
+  "version": "0.0.1",
+  "description": "Drag items in an ng-repeat to reorder them",
+  "keywords": [
+    "angular",
+    "drag",
+    "reorder",
+    "ng-repeat",
+    "directive"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/brandly/angular-drag-to-reorder",
+  "main": "dist/angular-drag-to-reorder.js"
+}

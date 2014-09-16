@@ -2,6 +2,10 @@
 
 > Drag items in an ng-repeat to reorder them
 
+```shell
+$ bower install --save angular-drag-to-reorder
+```
+
 I wrote this for [another small project](http://brandly.github.io/thelist/#/), and I figured someone else might find it useful. It's probably far less stable than something like [UI Sortable](https://github.com/angular-ui/ui-sortable), but that has all kinds of dependencies. This just needs Angular.
 
 There aren't many frills, but it seems to do the job in up-to-date browsers.

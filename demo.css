@@ -38,22 +38,28 @@ table {
 *, *:after, *:before {
   box-sizing: border-box; }
 
+body {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  text-align: center;
+  color: #333; }
+
 h1 {
   font-size: 36px;
   line-height: 40px; }
 
 .content {
   margin: 40px auto;
-  max-width: 400px; }
+  max-width: 300px; }
 
 .example {
   margin: 20px 0; }
 
 li {
   padding: 8px;
-  border-bottom: 1px solid #ccc; }
+  border-bottom: 1px solid #ddd;
+  line-height: 1.2; }
   li:first-child {
-    border-top: 1px solid #ccc; }
+    border-top: 1px solid #ddd; }
 
 .octocat {
   display: block;
@@ -67,7 +73,7 @@ li {
   opacity: 0.3; }
 
 .dropping {
-  background-color: #efefef; }
+  background-color: rgba(231, 237, 242, 0.63); }
 
 .dropping-above {
   padding-top: 16px; }

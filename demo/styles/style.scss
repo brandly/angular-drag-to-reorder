@@ -5,6 +5,12 @@
   box-sizing: border-box;
 }
 
+body {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  text-align: center;
+  color: #333;
+}
+
 h1 {
   font-size: 36px;
   line-height: 40px;
@@ -12,19 +18,20 @@ h1 {
 
 .content {
   margin: 40px auto;
-  max-width: 400px;
+  max-width: 300px;
 }
 
 .example {
   margin: 20px 0;
 }
 
-$border-style: 1px solid #ccc;
+$border-style: 1px solid #ddd;
 $base-padding: 8px;
 
 li {
   padding: $base-padding;
   border-bottom: $border-style;
+  line-height: 1.2;
 
   &:first-child {
     border-top: $border-style;
@@ -46,7 +53,7 @@ li {
 }
 
 .dropping {
-  background-color: #efefef;
+  background-color: rgba(231, 237, 242, 0.63);
 }
 
 .dropping-above {

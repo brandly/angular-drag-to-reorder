@@ -3,6 +3,7 @@
   "description": "Drag items in an ng-repeat to reorder them",
   "author": "Matthew Brandly",
   "version": "0.0.1",
+  "homepage": "http://brandly.github.io/angular-drag-to-reorder/",
   "private": true,
   "devDependencies": {
     "gulp": "~3.5.1",
@@ -15,6 +16,7 @@
     "gulp-minify-css": "~0.3.0",
     "express": "^3.4.8",
     "path": "~0.4.9",
-    "gulp-rename": "^1.2.0"
+    "gulp-rename": "^1.2.0",
+    "gulp-header": "^1.2.2"
   }
 }

@@ -1,5 +1,5 @@
 /*
-  angular-drag-to-reorder v0.0.1
+  angular-drag-to-reorder v0.0.2
   http://brandly.github.io/angular-drag-to-reorder/
 */
 (function() {

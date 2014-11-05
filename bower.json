@@ -1,6 +1,6 @@
 {
   "name": "angular-drag-to-reorder",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Drag items in an ng-repeat to reorder them",
   "keywords": [
     "angular",

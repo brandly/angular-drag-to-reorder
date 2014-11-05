@@ -2,7 +2,7 @@
   "name": "angular-drag-to-reorder",
   "description": "Drag items in an ng-repeat to reorder them",
   "author": "Matthew Brandly",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "http://brandly.github.io/angular-drag-to-reorder/",
   "private": true,
   "devDependencies": {

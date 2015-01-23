@@ -3,14 +3,30 @@
   http://brandly.github.io/angular-drag-to-reorder/
 */
 (function() {
-  angular.module('mb-dragToReorder', []).directive('dragToReorder', [
-    function() {
+  angular.module('mb-dragToReorder', []).factory('itemBeingDragged', function() {
+    var items;
+    items = {};
+    return {
+      set: function(list, item) {
+        return items[list] = item;
+      },
+      get: function(list) {
+        return items[list];
+      },
+      clear: function(list) {
+        return items[list] = null;
+      }
+    };
+  }).directive('dragToReorder', [
+    'itemBeingDragged', function(itemBeingDragged) {
       return {
         link: function(scope, element, attrs) {
-          var dragOverHandler, draggingClassName, dropHandler, droppingAboveClassName, droppingBelowClassName, droppingClassName;
+          var dragOverHandler, draggingClassName, dropAbove, dropHandler, droppingAboveClassName, droppingBelowClassName, droppingClassName, listName, moveItemInArray;
           if (scope[attrs.dragToReorder] == null) {
             throw 'Must specify the list to reorder';
           }
+          listName = attrs.dragToReorder;
+          dropAbove = false;
 
           /*
             drag stuff
@@ -19,7 +35,7 @@
           element.attr('draggable', true);
           element.on('dragstart', function(e) {
             element.addClass(draggingClassName);
-            return e.dataTransfer.setData('text/plain', scope.$index);
+            return itemBeingDragged.set(listName, element);
           });
           element.on('dragend', function() {
             return element.removeClass(draggingClassName);
@@ -37,54 +53,49 @@
             offsetY = e.offsetY || e.layerY;
             if (offsetY < (this.offsetHeight / 2)) {
               element.removeClass(droppingBelowClassName);
-              return element.addClass(droppingAboveClassName);
+              element.addClass(droppingAboveClassName);
+              return dropAbove = true;
             } else {
               element.removeClass(droppingAboveClassName);
-              return element.addClass(droppingBelowClassName);
+              element.addClass(droppingBelowClassName);
+              return dropAbove = false;
             }
           };
+          moveItemInArray = function(list, oldIndex, newIndex) {
+            var k;
+            if (newIndex >= list.length) {
+              k = newIndex - list.length;
+              while ((k--) + 1) {
+                list.push(void 0);
+              }
+            }
+            list.splice(newIndex, 0, list.splice(oldIndex, 1)[0]);
+            return list;
+          };
           dropHandler = function(e) {
-            var droppedItemIndex, i, itemToMove, newIndex, theList, _i, _j;
-            e.preventDefault();
-            droppedItemIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
+            var droppedItem, newIndex, oldIndex, theList;
+            droppedItem = itemBeingDragged.get(listName);
+            if (!droppedItem) {
+              return;
+            }
+            oldIndex = droppedItem.scope().$index;
+            newIndex = dropAbove ? scope.$index - 1 : scope.$index;
             theList = scope[attrs.dragToReorder];
-            newIndex = null;
-            if (element.hasClass(droppingAboveClassName)) {
-              if (droppedItemIndex < scope.$index) {
-                newIndex = scope.$index - 1;
-              } else {
-                newIndex = scope.$index;
-              }
-            } else {
-              if (droppedItemIndex < scope.$index) {
-                newIndex = scope.$index;
-              } else {
-                newIndex = scope.$index + 1;
-              }
-            }
-            itemToMove = theList[droppedItemIndex];
-            if (newIndex > droppedItemIndex) {
-              for (i = _i = droppedItemIndex; _i < newIndex; i = _i += 1) {
-                theList[i] = theList[i + 1];
-              }
-            } else if (newIndex < droppedItemIndex) {
-              for (i = _j = droppedItemIndex; _j > newIndex; i = _j += -1) {
-                theList[i] = theList[i - 1];
-              }
-            }
-            theList[newIndex] = itemToMove;
             scope.$apply(function() {
+              moveItemInArray(theList, oldIndex, newIndex);
               return scope.$emit('dragToReorder.reordered', {
                 array: theList,
-                item: itemToMove,
-                from: droppedItemIndex,
+                item: theList[newIndex],
+                from: oldIndex,
                 to: newIndex
               });
             });
             element.removeClass(droppingClassName);
             element.removeClass(droppingAboveClassName);
             element.removeClass(droppingBelowClassName);
-            return element.off('drop', dropHandler);
+            element.off('drop', dropHandler);
+            dropAbove = false;
+            return itemBeingDragged.clear(listName);
           };
           element.on('dragenter', function(e) {
             if (element.hasClass(draggingClassName)) {

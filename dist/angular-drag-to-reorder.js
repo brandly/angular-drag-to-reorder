@@ -6,20 +6,20 @@
   angular.module('mb-dragToReorder', []).directive('dragToReorder', [
     function() {
       return {
+        scope: {
+          dragToReorder: '='
+        },
         link: function(scope, element, attrs) {
-          var dragOverHandler, draggingClassName, dropHandler, droppingAboveClassName, droppingBelowClassName, droppingClassName;
-          if (scope[attrs.dragToReorder] == null) {
-            throw 'Must specify the list to reorder';
-          }
 
           /*
             drag stuff
            */
+          var dragOverHandler, draggingClassName, dropHandler, droppingAboveClassName, droppingBelowClassName, droppingClassName;
           draggingClassName = 'dragging';
           element.attr('draggable', true);
           element.on('dragstart', function(e) {
             element.addClass(draggingClassName);
-            return e.dataTransfer.setData('text/plain', scope.$index);
+            return e.dataTransfer.setData('text/plain', scope.$parent.$index);
           });
           element.on('dragend', function() {
             return element.removeClass(draggingClassName);
@@ -45,38 +45,29 @@
             }
           };
           dropHandler = function(e) {
-            var droppedItemIndex, i, itemToMove, newIndex, theList, _i, _j;
+            var droppedItemIndex, itemToMove, newIndex;
             e.preventDefault();
             droppedItemIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
-            theList = scope[attrs.dragToReorder];
             newIndex = null;
             if (element.hasClass(droppingAboveClassName)) {
-              if (droppedItemIndex < scope.$index) {
-                newIndex = scope.$index - 1;
+              if (droppedItemIndex < scope.$parent.$index) {
+                newIndex = scope.$parent.$index - 1;
               } else {
-                newIndex = scope.$index;
+                newIndex = scope.$parent.$index;
               }
             } else {
-              if (droppedItemIndex < scope.$index) {
-                newIndex = scope.$index;
+              if (droppedItemIndex < scope.$parent.$index) {
+                newIndex = scope.$parent.$index;
               } else {
-                newIndex = scope.$index + 1;
+                newIndex = scope.$parent.$index + 1;
               }
             }
-            itemToMove = theList[droppedItemIndex];
-            if (newIndex > droppedItemIndex) {
-              for (i = _i = droppedItemIndex; _i < newIndex; i = _i += 1) {
-                theList[i] = theList[i + 1];
-              }
-            } else if (newIndex < droppedItemIndex) {
-              for (i = _j = droppedItemIndex; _j > newIndex; i = _j += -1) {
-                theList[i] = theList[i - 1];
-              }
-            }
-            theList[newIndex] = itemToMove;
+            itemToMove = scope.dragToReorder[droppedItemIndex];
+            scope.dragToReorder.splice(droppedItemIndex, 1);
+            scope.dragToReorder.splice(newIndex, 0, itemToMove);
             scope.$apply(function() {
               return scope.$emit('dragToReorder.reordered', {
-                array: theList,
+                array: scope.dragToReorder,
                 item: itemToMove,
                 from: droppedItemIndex,
                 to: newIndex

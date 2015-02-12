@@ -1,8 +1,8 @@
 angular.module('mb-dragToReorder', [])
 .directive('dragToReorder', [ ->
+  scope:
+    dragToReorder: '='
   link: (scope, element, attrs) ->
-    unless scope[attrs.dragToReorder]?
-      throw 'Must specify the list to reorder'
     ###
       drag stuff
     ###
@@ -12,7 +12,7 @@ angular.module('mb-dragToReorder', [])
 
     element.on 'dragstart', (e) ->
       element.addClass draggingClassName
-      e.dataTransfer.setData 'text/plain', scope.$index
+      e.dataTransfer.setData 'text/plain', scope.$parent.$index
 
     element.on 'dragend', ->
       element.removeClass draggingClassName
@@ -42,49 +42,40 @@ angular.module('mb-dragToReorder', [])
     dropHandler = (e) ->
       e.preventDefault()
       droppedItemIndex = parseInt e.dataTransfer.getData('text/plain'), 10
-      theList = scope[attrs.dragToReorder]
 
       newIndex = null
       # dropping item above us
       if element.hasClass droppingAboveClassName
-        if droppedItemIndex < scope.$index
+        if droppedItemIndex < scope.$parent.$index
           # dropped item was already above us,
           # so now it'll be one index above
-          newIndex = scope.$index - 1
+          newIndex = scope.$parent.$index - 1
         else
           # since it's moving from below to above us,
           # it'll need to take our index
-          newIndex = scope.$index
+          newIndex = scope.$parent.$index
 
       # dropping item below us
       else
-        if droppedItemIndex < scope.$index
+        if droppedItemIndex < scope.$parent.$index
           # moving above to below
-          newIndex = scope.$index
+          newIndex = scope.$parent.$index
         else
           # still below
-          newIndex = scope.$index + 1
+          newIndex = scope.$parent.$index + 1
 
-      itemToMove = theList[droppedItemIndex]
-      # moving down the list
-      if newIndex > droppedItemIndex
-        # move all items below it...
-        for i in [droppedItemIndex...newIndex] by 1
-          # ...up one spot
-          theList[i] = theList[i + 1]
+      itemToMove = scope.dragToReorder[droppedItemIndex]
 
-      # moving up the list
-      else if newIndex < droppedItemIndex
-        for i in [droppedItemIndex...newIndex] by -1
-          theList[i] = theList[i - 1]
-
+      # remove it from the list
+      scope.dragToReorder.splice droppedItemIndex, 1
       # put it in its new home
-      theList[newIndex] = itemToMove
+      scope.dragToReorder.splice newIndex, 0, itemToMove
+      
       # let angular rearrange the DOM
       scope.$apply ->
         # and let em know
         scope.$emit 'dragToReorder.reordered',
-          array: theList
+          array: scope.dragToReorder
           item: itemToMove
           from: droppedItemIndex
           to: newIndex

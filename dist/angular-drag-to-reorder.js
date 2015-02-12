@@ -32,10 +32,11 @@
           droppingAboveClassName = 'dropping-above';
           droppingBelowClassName = 'dropping-below';
           dragOverHandler = function(e) {
-            var offsetY;
+            var hoveredElementY, offsetY;
             e.preventDefault();
             offsetY = e.offsetY || e.layerY;
-            if (offsetY < (this.offsetHeight / 2)) {
+            hoveredElementY = this.offsetTop - this.scrollTop + this.clientTop;
+            if (offsetY < hoveredElementY + (this.offsetHeight / 2)) {
               element.removeClass(droppingBelowClassName);
               return element.addClass(droppingAboveClassName);
             } else {

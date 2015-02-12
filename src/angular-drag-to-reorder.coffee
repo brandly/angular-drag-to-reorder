@@ -28,9 +28,10 @@ angular.module('mb-dragToReorder', [])
     dragOverHandler = (e) ->
       e.preventDefault()
       offsetY = e.offsetY or e.layerY
+      hoveredElementY = @offsetTop - @scrollTop + @clientTop;
 
       # above halfway
-      if offsetY < (@offsetHeight / 2)
+      if offsetY < hoveredElementY+(@offsetHeight / 2)
         element.removeClass droppingBelowClassName
         element.addClass droppingAboveClassName
       # below

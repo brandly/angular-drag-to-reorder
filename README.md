@@ -38,9 +38,6 @@ There's just one. When the list gets reordered, `dragToReorder.reordered` will f
 
 ```js
 $scope.$on('dragToReorder.reordered', function ($event, reordered) {
-  // The list being reordered
-  reordered.array
-
   // The item that was relocated
   reordered.item
 

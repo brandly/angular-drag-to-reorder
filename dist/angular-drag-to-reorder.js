@@ -67,7 +67,6 @@
             scope.dragToReorder.splice(newIndex, 0, itemToMove);
             scope.$apply(function() {
               return scope.$emit('dragToReorder.reordered', {
-                array: scope.dragToReorder,
                 item: itemToMove,
                 from: droppedItemIndex,
                 to: newIndex

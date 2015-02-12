@@ -75,7 +75,6 @@ angular.module('mb-dragToReorder', [])
       scope.$apply ->
         # and let em know
         scope.$emit 'dragToReorder.reordered',
-          array: scope.dragToReorder
           item: itemToMove
           from: droppedItemIndex
           to: newIndex

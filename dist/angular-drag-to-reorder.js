@@ -19,9 +19,18 @@
           element.attr('draggable', true);
           element.on('dragstart', function(e) {
             element.addClass(draggingClassName);
+            scope.$apply(function() {
+              return scope.$emit('dragToReorder.dragstart', {
+                item: scope.dragToReorder[scope.$parent.$index],
+                from: scope.$parent.$index
+              });
+            });
             return e.dataTransfer.setData('text/plain', scope.$parent.$index);
           });
           element.on('dragend', function() {
+            scope.$apply(function() {
+              return scope.$emit('dragToReorder.dragend');
+            });
             return element.removeClass(draggingClassName);
           });
 

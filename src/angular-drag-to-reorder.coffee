@@ -12,9 +12,23 @@ angular.module('mb-dragToReorder', [])
 
     element.on 'dragstart', (e) ->
       element.addClass draggingClassName
+      
+      # let angular rearrange the DOM
+      scope.$apply ->
+        # and let em know
+        scope.$emit 'dragToReorder.dragstart',
+          item: scope.dragToReorder[scope.$parent.$index],
+          from: scope.$parent.$index,
+
       e.dataTransfer.setData 'text/plain', scope.$parent.$index
 
     element.on 'dragend', ->
+
+      # let angular rearrange the DOM
+      scope.$apply ->
+        # and let em know
+        scope.$emit 'dragToReorder.dragend'
+
       element.removeClass draggingClassName
 
     ###

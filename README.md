@@ -22,6 +22,16 @@ Add `drag-to-reorder` alongside your `ng-repeat` and specify the name of the col
 
 And it should Just Work&#0153;.
 
+You may specify a drag handle:
+
+```html
+<ul>
+  <li ng-repeat="item in list" drag-to-reorder="list" drag-handle="my-handle">
+    <div class="my-handle">Drag me</div>
+  </li>
+</ul>
+```
+
 ## What else?
 
 ### Classes
@@ -34,13 +44,22 @@ The element that is being hovered over by a dragged element will have a `droppin
 
 ### Events
 
-There's just one. When the list gets reordered, `dragToReorder.reordered` will fire, passing you some relevant data.
+##### Dragstart 
+When an item gets dragged, `dragToReorder.dragstart` will fire, passing you the dragged item and it's index.
+```js
+$scope.$on('dragToReorder.dragstart', function ($event, dragstart) {
+  // The item that was relocated
+  dragstart.item
 
+  // The initial index of that item
+  dragstart.from
+});
+```	
+
+##### Reordered 
+When the list gets reordered, `dragToReorder.reordered` will fire, passing you some relevant data.
 ```js
 $scope.$on('dragToReorder.reordered', function ($event, reordered) {
-  // The list being reordered
-  reordered.array
-
   // The item that was relocated
   reordered.item
 
@@ -49,6 +68,14 @@ $scope.$on('dragToReorder.reordered', function ($event, reordered) {
 
   // The index where it ended up
   reordered.to
+});
+```
+
+##### Dragend 
+This event will always fire when the dragged item is dropped, even is the order hasn't changed.
+```js
+$scope.$on('dragToReorder.dragend', function ($event) {
+  // Your code here
 });
 ```
 

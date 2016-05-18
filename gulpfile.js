@@ -70,7 +70,7 @@ gulp.task('images', function () {
 });
 
 gulp.task('index', function () {
-  return gulp.src('demo/index.html')
+  return gulp.src(['demo/index.html','demo/save.php'])
     .pipe(gulp.dest(build));
 });
 

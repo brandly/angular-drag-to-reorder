@@ -1,20 +1,38 @@
 angular.module('mb-dragToReorder', [])
 .directive('dragToReorder', [ ->
+  scope:
+    dragToReorder: '='
   link: (scope, element, attrs) ->
-    unless scope[attrs.dragToReorder]?
-      throw 'Must specify the list to reorder'
     ###
       drag stuff
     ###
 
+    handle = if attrs.dragHandle then angular.element(element[0].getElementsByClassName(attrs.dragHandle)) else element
     draggingClassName = 'dragging'
-    element.attr 'draggable', true
+    handle.attr 'draggable', true
 
-    element.on 'dragstart', (e) ->
+    handle.on 'dragstart', (e) ->
+
+      e.dataTransfer.setDragImage(element[0],0,0)
+
       element.addClass draggingClassName
-      e.dataTransfer.setData 'text/plain', scope.$index
+      
+      # let angular rearrange the DOM
+      scope.$apply ->
+        # and let em know
+        scope.$emit 'dragToReorder.dragstart',
+          item: scope.dragToReorder[scope.$parent.$index],
+          from: scope.$parent.$index,
 
-    element.on 'dragend', ->
+      e.dataTransfer.setData 'text/plain', scope.$parent.$index
+
+    handle.on 'dragend', ->
+
+      # let angular rearrange the DOM
+      scope.$apply ->
+        # and let em know
+        scope.$emit 'dragToReorder.dragend'
+
       element.removeClass draggingClassName
 
     ###
@@ -26,11 +44,13 @@ angular.module('mb-dragToReorder', [])
     droppingBelowClassName = 'dropping-below'
 
     dragOverHandler = (e) ->
+      e = e or window.event;
       e.preventDefault()
-      offsetY = e.offsetY or e.layerY
+      offsetY = e.pageY
+      hoveredElementY = @offsetTop - @scrollTop + @clientTop;
 
       # above halfway
-      if offsetY < (@offsetHeight / 2)
+      if offsetY < hoveredElementY+(@offsetHeight / 2)
         element.removeClass droppingBelowClassName
         element.addClass droppingAboveClassName
       # below
@@ -41,49 +61,39 @@ angular.module('mb-dragToReorder', [])
     dropHandler = (e) ->
       e.preventDefault()
       droppedItemIndex = parseInt e.dataTransfer.getData('text/plain'), 10
-      theList = scope[attrs.dragToReorder]
 
       newIndex = null
       # dropping item above us
       if element.hasClass droppingAboveClassName
-        if droppedItemIndex < scope.$index
+        if droppedItemIndex < scope.$parent.$index
           # dropped item was already above us,
           # so now it'll be one index above
-          newIndex = scope.$index - 1
+          newIndex = scope.$parent.$index - 1
         else
           # since it's moving from below to above us,
           # it'll need to take our index
-          newIndex = scope.$index
+          newIndex = scope.$parent.$index
 
       # dropping item below us
       else
-        if droppedItemIndex < scope.$index
+        if droppedItemIndex < scope.$parent.$index
           # moving above to below
-          newIndex = scope.$index
+          newIndex = scope.$parent.$index
         else
           # still below
-          newIndex = scope.$index + 1
+          newIndex = scope.$parent.$index + 1
 
-      itemToMove = theList[droppedItemIndex]
-      # moving down the list
-      if newIndex > droppedItemIndex
-        # move all items below it...
-        for i in [droppedItemIndex...newIndex] by 1
-          # ...up one spot
-          theList[i] = theList[i + 1]
+      itemToMove = scope.dragToReorder[droppedItemIndex]
 
-      # moving up the list
-      else if newIndex < droppedItemIndex
-        for i in [droppedItemIndex...newIndex] by -1
-          theList[i] = theList[i - 1]
-
+      # remove it from the list
+      scope.dragToReorder.splice droppedItemIndex, 1
       # put it in its new home
-      theList[newIndex] = itemToMove
+      scope.dragToReorder.splice newIndex, 0, itemToMove
+      
       # let angular rearrange the DOM
       scope.$apply ->
         # and let em know
         scope.$emit 'dragToReorder.reordered',
-          array: theList
           item: itemToMove
           from: droppedItemIndex
           to: newIndex

@@ -42,8 +42,9 @@
           droppingBelowClassName = 'dropping-below';
           dragOverHandler = function(e) {
             var hoveredElementY, offsetY;
+            e = e || window.event;
             e.preventDefault();
-            offsetY = e.offsetY || e.layerY;
+            offsetY = e.pageY;
             hoveredElementY = this.offsetTop - this.scrollTop + this.clientTop;
             if (offsetY < hoveredElementY + (this.offsetHeight / 2)) {
               element.removeClass(droppingBelowClassName);

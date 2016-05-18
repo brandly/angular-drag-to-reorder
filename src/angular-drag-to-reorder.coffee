@@ -40,8 +40,9 @@ angular.module('mb-dragToReorder', [])
     droppingBelowClassName = 'dropping-below'
 
     dragOverHandler = (e) ->
+      e = e or window.event;
       e.preventDefault()
-      offsetY = e.offsetY or e.layerY
+      offsetY = e.pageY
       hoveredElementY = @offsetTop - @scrollTop + @clientTop;
 
       # above halfway

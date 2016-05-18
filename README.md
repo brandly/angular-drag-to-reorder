@@ -22,6 +22,16 @@ Add `drag-to-reorder` alongside your `ng-repeat` and specify the name of the col
 
 And it should Just Work&#0153;.
 
+You may specify a drag handle:
+
+```html
+<ul>
+  <li ng-repeat="item in list" drag-to-reorder="list" drag-handle="my-handle">
+    <div class="my-handle">Drag me</div>
+  </li>
+</ul>
+```
+
 ## What else?
 
 ### Classes

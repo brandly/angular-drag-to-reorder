@@ -14,10 +14,12 @@
           /*
             drag stuff
            */
-          var dragOverHandler, draggingClassName, dropHandler, droppingAboveClassName, droppingBelowClassName, droppingClassName;
+          var dragOverHandler, draggingClassName, dropHandler, droppingAboveClassName, droppingBelowClassName, droppingClassName, handle;
+          handle = attrs.dragHandle ? angular.element(element[0].getElementsByClassName(attrs.dragHandle)) : element;
           draggingClassName = 'dragging';
-          element.attr('draggable', true);
-          element.on('dragstart', function(e) {
+          handle.attr('draggable', true);
+          handle.on('dragstart', function(e) {
+            e.dataTransfer.setDragImage(element[0], 0, 0);
             element.addClass(draggingClassName);
             scope.$apply(function() {
               return scope.$emit('dragToReorder.dragstart', {
@@ -27,7 +29,7 @@
             });
             return e.dataTransfer.setData('text/plain', scope.$parent.$index);
           });
-          element.on('dragend', function() {
+          handle.on('dragend', function() {
             scope.$apply(function() {
               return scope.$emit('dragToReorder.dragend');
             });

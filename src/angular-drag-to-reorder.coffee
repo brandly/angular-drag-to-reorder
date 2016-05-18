@@ -7,10 +7,14 @@ angular.module('mb-dragToReorder', [])
       drag stuff
     ###
 
+    handle = if attrs.dragHandle then angular.element(element[0].getElementsByClassName(attrs.dragHandle)) else element
     draggingClassName = 'dragging'
-    element.attr 'draggable', true
+    handle.attr 'draggable', true
 
-    element.on 'dragstart', (e) ->
+    handle.on 'dragstart', (e) ->
+
+      e.dataTransfer.setDragImage(element[0],0,0)
+
       element.addClass draggingClassName
       
       # let angular rearrange the DOM
@@ -22,7 +26,7 @@ angular.module('mb-dragToReorder', [])
 
       e.dataTransfer.setData 'text/plain', scope.$parent.$index
 
-    element.on 'dragend', ->
+    handle.on 'dragend', ->
 
       # let angular rearrange the DOM
       scope.$apply ->

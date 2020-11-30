@@ -12,10 +12,16 @@ angular.module('mb-dragToReorder', [])
 
     element.on 'dragstart', (e) ->
       element.addClass draggingClassName
-      e.dataTransfer.setData 'text/plain', scope.$index
+      scope.$apply ->
+        scope.$emit 'dragToReorder.dragstart', 
+          item: scope[attrs.dragToReorder][scope.$index]
+          from: scope.$index
+      e.dataTransfer.setData 'text', scope.$index.toString()
 
     element.on 'dragend', ->
       element.removeClass draggingClassName
+      scope.$apply ->
+        scope.$emit 'dragToReorder.dragend'
 
     ###
       drop stuff
@@ -40,7 +46,7 @@ angular.module('mb-dragToReorder', [])
 
     dropHandler = (e) ->
       e.preventDefault()
-      droppedItemIndex = parseInt e.dataTransfer.getData('text/plain'), 10
+      droppedItemIndex = parseInt e.dataTransfer.getData('text'), 10
       theList = scope[attrs.dragToReorder]
 
       newIndex = null
